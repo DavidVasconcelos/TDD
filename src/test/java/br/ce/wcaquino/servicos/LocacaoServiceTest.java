@@ -6,10 +6,7 @@ import br.ce.wcaquino.entidades.Locacao;
 import br.ce.wcaquino.entidades.Usuario;
 import br.ce.wcaquino.exceptions.FilmeSemEstoqueException;
 import br.ce.wcaquino.exceptions.LocadoraException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExpectedException;
 
@@ -22,6 +19,8 @@ import static org.junit.Assert.*;
 
 public class LocacaoServiceTest {
 
+    private LocacaoService service;
+
     @Rule
     public ErrorCollector error = new ErrorCollector();
 
@@ -30,7 +29,7 @@ public class LocacaoServiceTest {
 
     @Before
     public void setup() {
-        System.out.println("Before");
+        this.service = new LocacaoService();
     }
 
     @After
@@ -38,11 +37,20 @@ public class LocacaoServiceTest {
         System.out.println("After");
     }
 
+    @BeforeClass
+    public static void setupClass() {
+        System.out.println("Before Class");
+    }
+
+    @AfterClass
+    public static void tearDownClass() {
+        System.out.println("After Class");
+    }
+
     @Test
     public void testeLocacaoAssert() throws Exception {
 
         //cenario
-        LocacaoService service = new LocacaoService();
         Usuario usuario = new Usuario("Usuario 1");
         Filme filme = new Filme("Filme 1", 2, 5.0);
 
@@ -67,7 +75,6 @@ public class LocacaoServiceTest {
     public void testeLocacao_Error() throws Exception {
 
         //cenario
-        LocacaoService service = new LocacaoService();
         Usuario usuario = new Usuario("Usuario 1");
         Filme filme = new Filme("Filme 1", 2, 5.0);
 
@@ -86,7 +93,6 @@ public class LocacaoServiceTest {
     public void testeLocacao_filmeSemEstoque_Expected() throws Exception {
 
         //cenario
-        LocacaoService service = new LocacaoService();
         Usuario usuario = new Usuario("Usuario 1");
         Filme filme = new Filme("Filme 1", 0, 5.0);
 
@@ -100,7 +106,6 @@ public class LocacaoServiceTest {
     public void testeLocacao_filmeSemEstoque() {
 
         //cenario
-        LocacaoService service = new LocacaoService();
         Usuario usuario = new Usuario("Usuario 1");
         Filme filme = new Filme("Filme 1", 0, 5.0);
 
@@ -119,7 +124,6 @@ public class LocacaoServiceTest {
     public void testeLocacao_filmeSemEstoque_Rule() throws Exception {
 
         //cenario
-        LocacaoService service = new LocacaoService();
         Usuario usuario = new Usuario("Usuario 1");
         Filme filme = new Filme("Filme 1", 0, 5.0);
 
@@ -136,7 +140,6 @@ public class LocacaoServiceTest {
     public void testLocacao_usuarioVazio() throws FilmeSemEstoqueException {
 
         //cenario
-        LocacaoService service = new LocacaoService();
         Usuario usuario = null;
         Filme filme = new Filme("Filme 1", 1, 5.0);
 
@@ -154,7 +157,6 @@ public class LocacaoServiceTest {
     public void testLocacao_FilmeVazio() throws FilmeSemEstoqueException, LocadoraException {
 
         //cenario
-        LocacaoService service = new LocacaoService();
         Usuario usuario = new Usuario("Usuario 1");
         Filme filme = null;
 
