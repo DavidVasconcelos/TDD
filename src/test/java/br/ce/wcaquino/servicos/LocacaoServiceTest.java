@@ -10,7 +10,9 @@ import org.junit.*;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExpectedException;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import static br.ce.wcaquino.utils.DataUtils.isMesmaData;
 import static br.ce.wcaquino.utils.DataUtils.obterDataComDiferencaDias;
@@ -52,10 +54,10 @@ public class LocacaoServiceTest {
 
         //cenario
         Usuario usuario = new Usuario("Usuario 1");
-        Filme filme = new Filme("Filme 1", 2, 5.0);
+        List<Filme> filmes = Arrays.asList(new Filme("Filme 1", 2, 5.0));
 
         //acao
-        Locacao locacao = service.alugarFilme(usuario, filme);
+        Locacao locacao = service.alugarFilme(usuario, filmes);
 
         //verificao
         assertEquals(5.0, locacao.getValor(), 0.01);
@@ -76,10 +78,10 @@ public class LocacaoServiceTest {
 
         //cenario
         Usuario usuario = new Usuario("Usuario 1");
-        Filme filme = new Filme("Filme 1", 2, 5.0);
+        List<Filme> filmes = Arrays.asList(new Filme("Filme 1", 2, 5.0));
 
         //acao
-        Locacao locacao = service.alugarFilme(usuario, filme);
+        Locacao locacao = service.alugarFilme(usuario, filmes);
 
         //Usando o error
         error.checkThat(locacao.getValor(), is(equalTo(5.0)));
@@ -94,10 +96,10 @@ public class LocacaoServiceTest {
 
         //cenario
         Usuario usuario = new Usuario("Usuario 1");
-        Filme filme = new Filme("Filme 1", 0, 5.0);
+        List<Filme> filmes = Arrays.asList(new Filme("Filme 1", 0, 5.0));
 
         //acao
-        service.alugarFilme(usuario, filme);
+        service.alugarFilme(usuario, filmes);
 
 
     }
@@ -107,11 +109,11 @@ public class LocacaoServiceTest {
 
         //cenario
         Usuario usuario = new Usuario("Usuario 1");
-        Filme filme = new Filme("Filme 1", 0, 5.0);
+        List<Filme> filmes = Arrays.asList(new Filme("Filme 1", 0, 5.0));
 
         //acao
         try {
-            service.alugarFilme(usuario, filme);
+            service.alugarFilme(usuario, filmes);
             fail("Deveria lançar uma exceção");
         } catch (Exception e) {
             assertThat(e.getMessage(), is("Filme sem estoque"));
@@ -125,13 +127,13 @@ public class LocacaoServiceTest {
 
         //cenario
         Usuario usuario = new Usuario("Usuario 1");
-        Filme filme = new Filme("Filme 1", 0, 5.0);
+        List<Filme> filmes = Arrays.asList(new Filme("Filme 1", 0, 5.0));
 
         expectedException.expect(FilmeSemEstoqueException.class);
         expectedException.expectMessage("Filme sem estoque");
 
         //acao
-        service.alugarFilme(usuario, filme);
+        service.alugarFilme(usuario, filmes);
 
 
     }
@@ -141,11 +143,11 @@ public class LocacaoServiceTest {
 
         //cenario
         Usuario usuario = null;
-        Filme filme = new Filme("Filme 1", 1, 5.0);
+        List<Filme> filmes = Arrays.asList(new Filme("Filme 1", 1, 5.0));
 
         //acao
         try {
-            service.alugarFilme(usuario, filme);
+            service.alugarFilme(usuario, filmes);
             fail("Deveria lançar uma exceção");
         } catch (LocadoraException e) {
             assertThat(e.getMessage(), is("Usuario vazio"));
@@ -158,13 +160,13 @@ public class LocacaoServiceTest {
 
         //cenario
         Usuario usuario = new Usuario("Usuario 1");
-        Filme filme = null;
+        List<Filme> filmes = null;
 
         expectedException.expect(LocadoraException.class);
         expectedException.expectMessage("Filme vazio");
 
 
-        service.alugarFilme(usuario, filme);
+        service.alugarFilme(usuario, filmes);
         fail("Deveria lançar uma exceção");
 
 
