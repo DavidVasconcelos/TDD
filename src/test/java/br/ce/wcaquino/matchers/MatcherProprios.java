@@ -11,4 +11,12 @@ public class MatcherProprios {
     public static DiaSemanaMatcher caiNumaSegunda() {
         return new DiaSemanaMatcher(Calendar.MONDAY);
     }
+
+    public static DiferencaDiasMatcher ehHoje() {
+        return new DiferencaDiasMatcher(0);
+    }
+
+    public static DiferencaDiasMatcher ehHojeComDiferencaDias(Integer diferenca) {
+        return new DiferencaDiasMatcher(diferenca);
+    }
 }

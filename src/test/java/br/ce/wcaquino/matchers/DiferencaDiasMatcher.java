@@ -1,6 +1,5 @@
 package br.ce.wcaquino.matchers;
 
-import br.ce.wcaquino.utils.DataUtils;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
@@ -8,23 +7,27 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class DiaSemanaMatcher extends TypeSafeMatcher<Date> {
+import static br.ce.wcaquino.utils.DataUtils.isMesmaData;
+import static br.ce.wcaquino.utils.DataUtils.obterDataComDiferencaDias;
+import static java.util.Calendar.DAY_OF_MONTH;
 
-    private Integer diaSemana;
+public class DiferencaDiasMatcher extends TypeSafeMatcher<Date> {
 
-    public DiaSemanaMatcher(Integer diaSemana) {
-        this.diaSemana = diaSemana;
+    private Integer diferencaDias;
+
+    public DiferencaDiasMatcher(Integer diferencaDias) {
+        this.diferencaDias = diferencaDias;
     }
 
     @Override
     protected boolean matchesSafely(Date date) {
-        return DataUtils.verificarDiaSemana(date, diaSemana);
+        return isMesmaData(date, obterDataComDiferencaDias(diferencaDias));
     }
 
     @Override
     public void describeTo(Description description) {
         Calendar data = Calendar.getInstance();
-        data.set(Calendar.DAY_OF_WEEK, diaSemana);
+        data.add(DAY_OF_MONTH, diferencaDias);
         String dataExtenso = data.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, new Locale("pt", "BR"));
         description.appendText(dataExtenso);
 
