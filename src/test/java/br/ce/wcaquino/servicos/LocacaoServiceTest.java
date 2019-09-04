@@ -15,6 +15,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static br.ce.wcaquino.matchers.MatcherProprios.caiNumaSegunda;
 import static br.ce.wcaquino.utils.DataUtils.isMesmaData;
 import static br.ce.wcaquino.utils.DataUtils.obterDataComDiferencaDias;
 import static org.hamcrest.CoreMatchers.*;
@@ -178,7 +179,7 @@ public class LocacaoServiceTest {
     }
 
     @Test
-    public void deveDevolverFilmeNoDomingo() throws FilmeSemEstoqueException, LocadoraException {
+    public void deveDevolverFilmeNaSegundaAoAlugarNoSabado() throws FilmeSemEstoqueException, LocadoraException {
 
         Assume.assumeTrue(DataUtils.verificarDiaSemana(new Date(), Calendar.SATURDAY));
 
@@ -190,8 +191,8 @@ public class LocacaoServiceTest {
         Locacao locacao = service.alugarFilme(usuario, filmes);
 
         //verificacao
-        boolean ehSegunda = DataUtils.verificarDiaSemana(locacao.getDataRetorno(), Calendar.MONDAY);
-        assertTrue(ehSegunda);
+        assertThat(locacao.getDataRetorno(), caiNumaSegunda());
+
 
     }
 
