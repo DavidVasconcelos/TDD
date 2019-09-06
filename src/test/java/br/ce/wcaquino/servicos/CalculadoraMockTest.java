@@ -1,6 +1,5 @@
 package br.ce.wcaquino.servicos;
 
-import br.ce.wcaquino.entidades.Locacao;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +33,7 @@ public class CalculadoraMockTest {
         System.out.println("Spy");
         calculadoraSpy.imprime();
     }
-
+    
     @Test
     public void teste() {
 
