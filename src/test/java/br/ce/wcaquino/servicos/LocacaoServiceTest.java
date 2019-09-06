@@ -1,6 +1,5 @@
 package br.ce.wcaquino.servicos;
 
-import br.ce.wcaquino.builders.LocacaoBuilder;
 import br.ce.wcaquino.daos.LocacaoDAO;
 import br.ce.wcaquino.entidades.Filme;
 import br.ce.wcaquino.entidades.Locacao;
