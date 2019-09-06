@@ -11,10 +11,7 @@ import br.ce.wcaquino.utils.DataUtils;
 import org.junit.*;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExpectedException;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -220,7 +217,7 @@ public class LocacaoServiceTest {
     }
 
     @Test
-    public void naoDeveAlugarFilmeParaNegativadoSPC() throws FilmeSemEstoqueException {
+    public void naoDeveAlugarFilmeParaNegativadoSPC() throws Exception {
 
         //cenario
         Usuario usuario = umUsuario().agora();
@@ -279,6 +276,44 @@ public class LocacaoServiceTest {
         verifyNoMoreInteractions(emailService);
 
 
+    }
+    @Test
+    public void deveTratarErroNoSPC() throws Exception {
+
+        //cenario
+        Usuario usuario = umUsuario().agora();
+        List<Filme> filmes = Arrays.asList(umFilme().agora());
+
+        when(spcService.possuiNegativacao(usuario)).thenThrow(new Exception("Falha catastrofica"));
+
+        //verificao
+        expectedException.expect(LocadoraException.class);
+        expectedException.expectMessage("Problemas com SPC, tente novamente");
+
+        //acao
+        service.alugarFilme(usuario, filmes);
+
+
+    }
+
+    @Test
+    public void deveProrrogarLocacao() {
+
+        //cenario
+        Locacao locacao = umaLocacao().agora();
+        int dias = 3;
+
+        //acao
+        service.prorrogarLocacao(locacao, dias);
+
+        //verificao
+        ArgumentCaptor<Locacao> argumentCaptor = ArgumentCaptor.forClass(Locacao.class);
+        verify(dao).salvar(argumentCaptor.capture());
+        Locacao locacaoRetornada = argumentCaptor.getValue();
+
+        error.checkThat(locacaoRetornada.getValor(), is(12.0));
+        error.checkThat(locacaoRetornada.getDataLocacao(), ehHoje());
+        error.checkThat(locacaoRetornada.getDataRetorno(), ehHojeComDiferencaDias(dias));
     }
 
 

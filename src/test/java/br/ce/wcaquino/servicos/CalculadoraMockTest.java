@@ -1,6 +1,9 @@
 package br.ce.wcaquino.servicos;
 
+import br.ce.wcaquino.entidades.Locacao;
+import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 public class CalculadoraMockTest {
@@ -9,8 +12,11 @@ public class CalculadoraMockTest {
     public void teste() {
 
         Calculadora calculadora = Mockito.mock(Calculadora.class);
-        Mockito.when(calculadora.soma(Mockito.eq(1), Mockito.anyInt())).thenReturn(5);
 
-        System.out.println(calculadora.soma(1, 8));
+        ArgumentCaptor<Integer> argumentCaptor = ArgumentCaptor.forClass(Integer.class);
+        Mockito.when(calculadora.soma(argumentCaptor.capture(), argumentCaptor.capture())).thenReturn(5);
+
+
+        Assert.assertEquals(5, calculadora.soma(1, 8));
     }
 }
