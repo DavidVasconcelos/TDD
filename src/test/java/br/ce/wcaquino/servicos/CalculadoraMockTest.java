@@ -33,7 +33,7 @@ public class CalculadoraMockTest {
         System.out.println("Spy");
         calculadoraSpy.imprime();
     }
-    
+
     @Test
     public void teste() {
 

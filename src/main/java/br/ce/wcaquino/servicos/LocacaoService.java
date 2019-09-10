@@ -22,9 +22,6 @@ public class LocacaoService {
 
     public Locacao alugarFilme(Usuario usuario, List<Filme> filmes) throws FilmeSemEstoqueException, LocadoraException {
 
-        Integer contador = 0;
-        Double valorTotal = 0d;
-
         if (usuario == null) {
             throw new LocadoraException("Usuario vazio");
         }
@@ -36,6 +33,46 @@ public class LocacaoService {
         if (filmes.stream().anyMatch(filme -> filme.getEstoque() == 0)) {
             throw new FilmeSemEstoqueException("Filme sem estoque");
         }
+
+        boolean negativado;
+
+        try {
+            negativado = spcService.possuiNegativacao(usuario);
+        } catch (Exception e) {
+            throw new LocadoraException("Problemas com SPC, tente novamente");
+        }
+
+        if (negativado) {
+            throw new LocadoraException("Usuario negativado");
+        }
+
+        Locacao locacao = new Locacao();
+        locacao.setFilmes(filmes);
+        locacao.setUsuario(usuario);
+        locacao.setDataLocacao(Calendar.getInstance().getTime());
+        locacao.setValor(calcularValorLocacao(filmes));
+
+
+        //Entrega no dia seguinte
+        Date dataEntrega = Calendar.getInstance().getTime();
+        dataEntrega = adicionarDias(dataEntrega, 1);
+
+        if (DataUtils.verificarDiaSemana(dataEntrega, Calendar.SUNDAY)) {
+            dataEntrega = adicionarDias(dataEntrega, 1);
+        }
+
+        locacao.setDataRetorno(dataEntrega);
+
+        //Salvando a locacao...
+        dao.salvar(locacao);
+
+        return locacao;
+    }
+
+    private Double calcularValorLocacao(List<Filme> filmes) {
+
+        Integer contador = 0;
+        Double valorTotal = 0d;
 
         for (Filme filme : filmes) {
 
@@ -64,40 +101,7 @@ public class LocacaoService {
             valorTotal += valorFilme;
 
         }
-
-        boolean negativado;
-
-        try {
-            negativado = spcService.possuiNegativacao(usuario);
-        } catch (Exception e) {
-            throw new LocadoraException("Problemas com SPC, tente novamente");
-        }
-
-        if (negativado) {
-            throw new LocadoraException("Usuario negativado");
-        }
-
-        Locacao locacao = new Locacao();
-        locacao.setFilmes(filmes);
-        locacao.setUsuario(usuario);
-        locacao.setDataLocacao(new Date());
-        locacao.setValor(valorTotal);
-
-
-        //Entrega no dia seguinte
-        Date dataEntrega = new Date();
-        dataEntrega = adicionarDias(dataEntrega, 1);
-
-        if (DataUtils.verificarDiaSemana(dataEntrega, Calendar.SUNDAY)) {
-            dataEntrega = adicionarDias(dataEntrega, 1);
-        }
-
-        locacao.setDataRetorno(dataEntrega);
-
-        //Salvando a locacao...
-        dao.salvar(locacao);
-
-        return locacao;
+        return valorTotal;
     }
 
     public void notificarAtrasos() {
